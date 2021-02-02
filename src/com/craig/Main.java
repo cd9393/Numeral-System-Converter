@@ -4,19 +4,61 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         try(Scanner scanner = new Scanner(System.in)) {
-            int sourceRadix = Integer.parseInt(scanner.nextLine());
-            String sourceNumber = scanner.nextLine();
-            int targetRadix = Integer.parseInt(scanner.nextLine());
-
-            if (sourceNumber.contains(".")) {
-                convertFractions(sourceRadix,sourceNumber,targetRadix);
-            } else {
-                System.out.println(convertInteger(sourceRadix,sourceNumber,targetRadix));
+            while(true) {
+                String sourceRadixInput = scanner.nextLine();
+                if (!checkRadixInput(sourceRadixInput)) {
+                    System.out.println("Error");
+                    break;
+                }
+                String sourceNumberInput = scanner.nextLine();
+                int sourceRadix = Integer.parseInt(sourceRadixInput);
+                if (!checkNumberInput(sourceNumberInput,sourceRadix)) {
+                    System.out.println("Error");
+                    break;
+                }
+                String targetRadixInput = scanner.nextLine();
+                if (!checkRadixInput(targetRadixInput)) {
+                    System.out.println("Error");
+                    break;
+                }
+                int targetRadix = Integer.parseInt(targetRadixInput);
+                if (sourceNumberInput.contains(".")) {
+                    convertFractions(sourceRadix,sourceNumberInput,targetRadix);
+                } else {
+                    System.out.println(convertInteger(sourceRadix,sourceNumberInput,targetRadix));
+                }
+                break;
             }
-
         } catch (Exception ex) {
 
         }
+    }
+
+    public static boolean checkRadixInput(String input) {
+        if (input.matches("[0-9]+")) {
+            if (Integer.parseInt(input) >= 1 && Integer.parseInt(input) <= 36) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static boolean checkNumberInput(String input, int sourceRadix) {
+        if (sourceRadix == 1) {
+            for (int i = 0; i < input.length(); i++) {
+                if (Character.getNumericValue(input.charAt(i)) != sourceRadix) {
+                    return false;
+                };
+            }
+            return true;
+        }
+        for (int i = 0; i < input.length(); i++) {
+            if (Character.getNumericValue(input.charAt(i)) >= sourceRadix) {
+                return false;
+            };
+        }
+        return true;
     }
 
     public static void convertFractions(int sourceRadix, String sourceNumber, int targetRadix) {
